@@ -1,5 +1,5 @@
 /*
-    Copyright 2016 Domenico Ottolia
+   Copyright 2016 Domenico Ottolia
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -48,40 +48,41 @@ public class JSONWrapper{
 
     //NotNull
     public JSONWrapper get(String key){
-        JSONWrapper clone = this.clone();
         if(this.json != null){
+            JSONWrapper clone = this.clone();
             clone.value = this.json.opt(key);
             clone.json = this.json.optJSONObject(key);
 
             if(clone.value instanceof JSONArray){
                 clone.list = this.JSONArrayToList((JSONArray) clone.value);
             }
+            return clone;
         }
 
-        return clone;
+        return new JSONWrapper();
     }
 
     //NotNull
     public JSONWrapper get(int index){
-        JSONWrapper clone = this.clone();
         if(this.list != null){
-            Object obj = this.list.get(index);
+            JSONWrapper clone = this.clone();
+            Object obj = this.list.size() <= index ? null : this.list.get(index);
 
             if(obj instanceof JSONObject){clone.json = (JSONObject) obj;}
             else if(obj instanceof JSONArray){clone.list = clone.JSONArrayToList((JSONArray) obj);}
             else{clone.value = obj;}
+            return clone;
         }
         JSONWrapper array = this.asArrayNullable();
 
         if(array != null){return array.get(index);}
-        else{return clone;}
+        else{return new JSONWrapper();}
     }
 
     public List<JSONWrapper> iterator(){
         List<JSONWrapper> list = new ArrayList<>();
 
         for(Object obj : this.list == null ? new ArrayList<>() : this.list){
-            System.out.println(obj);
             if(obj instanceof JSONObject){list.add(new JSONWrapper((JSONObject) obj));}
             else if(obj instanceof JSONArray){list.add(new JSONWrapper(this.JSONArrayToList((JSONArray) obj)));}
             else{list.add(new JSONWrapper(obj));}
@@ -105,6 +106,12 @@ public class JSONWrapper{
     public Integer asInteger(){return this.asInteger(null);}
     public Integer asInteger(Integer defaultValue){
         if(this.value instanceof Integer){return (Integer) this.value;}
+        return defaultValue;
+    }
+    
+    public Float asFloat(){return this.asFloat(null);}
+    public Float asFloat(Float defaultValue){
+        if(this.value instanceof Float){return (Float) this.value;}
         return defaultValue;
     }
 
