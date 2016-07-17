@@ -1,6 +1,6 @@
 # JSONWrapper
 
-This is a lightweight, safe, simple wrapper around org.JSON.JSONObject that does not throw exceptions
+This is a safe, simple, lightweight wrapper around org.JSON.JSONObject that does not throw exceptions.
 
 ## Usage
 
