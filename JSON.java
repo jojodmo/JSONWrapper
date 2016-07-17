@@ -14,45 +14,41 @@
    limitations under the License.
 */
 
-package co.getblix.blix.util;
-
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class JSON{
+public class JSONWrapper{
 
     //Initialization
     public JSONObject json;
     public List<Object> list;
     public Object value = null;
 
-    public JSON(){
+    public JSONWrapper(){
         this.json = null;
     }
 
-    public JSON(String value){
+    public JSONWrapper(String value){
         if(value == null){this.json = null;}
 
         try{this.json = new JSONObject(value);}
         catch(Exception ex){this.json = null;}
     }
 
-    public JSON(List<Object> list){
+    public JSONWrapper(List<Object> list){
         this.list = list;
         this.value = list;
     }
 
-    public JSON(JSONObject unwrapped){this.json = unwrapped;}
-    public JSON(Object object){this.value = object;}
+    public JSONWrapper(JSONObject unwrapped){this.json = unwrapped;}
+    public JSONWrapper(Object object){this.value = object;}
 
-    public @NonNull JSON get(String key){
-        JSON clone = this.clone();
+    //NotNull
+    public JSONWrapper get(String key){
+        JSONWrapper clone = this.clone();
         if(this.json != null){
             clone.value = this.json.opt(key);
             clone.json = this.json.optJSONObject(key);
@@ -65,8 +61,9 @@ public class JSON{
         return clone;
     }
 
-    public @NonNull JSON get(int index){
-        JSON clone = this.clone();
+    //NotNull
+    public JSONWrapper get(int index){
+        JSONWrapper clone = this.clone();
         if(this.list != null){
             Object obj = this.list.get(index);
 
@@ -74,21 +71,20 @@ public class JSON{
             else if(obj instanceof JSONArray){clone.list = clone.JSONArrayToList((JSONArray) obj);}
             else{clone.value = obj;}
         }
-        JSON array = this.asArrayNullable();
+        JSONWrapper array = this.asArrayNullable();
 
         if(array != null){return array.get(index);}
         else{return clone;}
     }
 
-    public List<JSON> iterator(){
-        List<JSON> list = new ArrayList<>();
+    public List<JSONWrapper> iterator(){
+        List<JSONWrapper> list = new ArrayList<>();
 
-        System.out.println(this.list);
         for(Object obj : this.list == null ? new ArrayList<>() : this.list){
             System.out.println(obj);
-            if(obj instanceof JSONObject){list.add(new JSON((JSONObject) obj));}
-            else if(obj instanceof JSONArray){list.add(new JSON(this.JSONArrayToList((JSONArray) obj)));}
-            else{list.add(new JSON(obj));}
+            if(obj instanceof JSONObject){list.add(new JSONWrapper((JSONObject) obj));}
+            else if(obj instanceof JSONArray){list.add(new JSONWrapper(this.JSONArrayToList((JSONArray) obj)));}
+            else{list.add(new JSONWrapper(obj));}
         }
 
         return list;
@@ -135,12 +131,12 @@ public class JSON{
         return defaultValue;
     }
 
-    public @Nullable JSON asArrayNullable(){return this.asArray(null);}
-    public @NonNull JSON asArray(){return this.asArray(this);}
-    public JSON asArray(JSON defaultValue){
+    public /*@Nullable*/ JSONWrapper asArrayNullable(){return this.asArray(null);}
+    public /*@NonNull*/ JSONWrapper asArray(){return this.asArray(this);}
+    public JSONWrapper asArray(JSONWrapper defaultValue){
         if(this.value instanceof JSONArray){
             JSONArray array = (JSONArray) this.value;
-            return new JSON(this.JSONArrayToList(array));
+            return new JSONWrapper(this.JSONArrayToList(array));
         }
         return defaultValue;
     }
@@ -158,18 +154,12 @@ public class JSON{
         return list;
     }
 
-    public JSON clone(){
-        JSON json = new JSON();
+    public JSONWrapper clone(){
+        JSONWrapper json = new JSONWrapper();
         json.json = this.json;
         json.list = this.list;
         json.value = this.value;
 
         return json;
-    }
-
-    @Override
-    public String toString(){
-        String result = this.json == null ? (this.list == null ? (this.value == null ? "<null>" : this.value.toString()) : this.list.toString()) : this.json.toString();
-        return "JSON(" + result + ")";
     }
 }
