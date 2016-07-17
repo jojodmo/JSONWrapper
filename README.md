@@ -51,5 +51,31 @@ For example, let's use `JSONWrapper wrapper` to represent the JSON above
     wrapper.get("result").get("names").get(3).asString("Default Value"); //"Unicorn Popcorn"
     wrapper.get("result").get("names").get(4).asString("Default Value"); //"Default Value"
     
-    
+`.iterator()` can be used to iterate through an array. For example, with the JSON
 
+    {
+        "array" : [
+            "Value One",
+            "Value Purple",
+            "Value Banana",
+        ]
+    }
+    
+Taking `wrapped` as the `JSONWrapper` initialized with the JSON above,
+
+    JSONWrapper array = wrapped.get("array");
+    for(JSONWrapper value : array.iterator()){
+        System.out.print(", ");
+        System.out.print(value.asString());
+    }
+    
+    //or
+    
+    for(JSONWrapper value : wrapped.get("array").iterator()){
+        System.out.print(", ");
+        System.out.print(value.asString());
+    }
+    
+Will print
+
+    ", Value One, Value Purple, Value Banana"
