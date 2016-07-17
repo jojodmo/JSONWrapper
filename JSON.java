@@ -1,3 +1,19 @@
+/*
+    Copyright 2016 Domenico Ottolia
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+*/
+
 package co.getblix.blix.util;
 
 import android.support.annotation.NonNull;
@@ -9,9 +25,6 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by Domenico on 6/11/16.
- */
 public class JSON{
 
     //Initialization
@@ -38,7 +51,6 @@ public class JSON{
     public JSON(JSONObject unwrapped){this.json = unwrapped;}
     public JSON(Object object){this.value = object;}
 
-    //Going further into the JSON tree
     public @NonNull JSON get(String key){
         JSON clone = this.clone();
         if(this.json != null){
@@ -82,7 +94,6 @@ public class JSON{
         return list;
     }
 
-    //Converting values fetched using .get() to objects
     public String asString(){return this.asString(null);}
     public String asString(String defaultValue){
         if(this.value instanceof String){return (String) this.value;}
@@ -101,12 +112,10 @@ public class JSON{
         return defaultValue;
     }
 
-    //Converting values fetched using .get() to common arrays and lists
     public String[] asStringArray(){return this.asArray(new String[]{}, String.class);}
     public List<String> asStringList(){return this.asStringList(null);}
     public List<String> asStringList(List<String> defaultValue){return this.asList(defaultValue, String.class);}
 
-    //Converting values fetched using .get() to generic arrays and lists
     public <T> T[] asArray(T[] defaultValue, Class<T> type){
         List<T> list = this.asList(new ArrayList<T>(), type);
         return list.toArray(defaultValue);
@@ -126,7 +135,6 @@ public class JSON{
         return defaultValue;
     }
 
-    //Converting JSON arrays into co.getblix.blix.util.JSON format
     public @Nullable JSON asArrayNullable(){return this.asArray(null);}
     public @NonNull JSON asArray(){return this.asArray(this);}
     public JSON asArray(JSON defaultValue){
@@ -137,7 +145,6 @@ public class JSON{
         return defaultValue;
     }
 
-    //Utility methods
     private List<Object> JSONArrayToList(JSONArray array){
         List<Object> list = new ArrayList<>();
         for(int i = 0; i < array.length(); i++){
